@@ -45,5 +45,7 @@ flutter:
     platforms:
       linux:
         ffiPlugin: true
+      windows:
+        ffiPlugin: true
 topics:
  - crypto

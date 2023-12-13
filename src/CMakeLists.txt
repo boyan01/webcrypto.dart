@@ -96,6 +96,37 @@ if(NOT DEFINED crypto_sources_${PLATFORM}_${ARCH})
   set(crypto_sources_${PLATFORM}_${ARCH})
 endif()
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+  # Windows/MSVC option from CMakeLists.txt in BoringSSL
+
+  enable_language(ASM_NASM)
+
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
+
+  set(MSVC_DISABLED_WARNINGS_LIST
+      "C4100" # 'exarg' : unreferenced formal parameter
+      "C4127" # conditional expression is constant
+      "C4244" # 'function' : conversion from 'int' to 'uint8_t',
+              # possible loss of data
+      "C4267" # conversion from 'size_t' to 'int', possible loss of data
+      "C4706" # assignment within conditional expression
+      )
+  string(REPLACE "C" " -wd" MSVC_DISABLED_WARNINGS_STR
+                            ${MSVC_DISABLED_WARNINGS_LIST})
+  set(CMAKE_C_FLAGS   "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR}")
+  set(CMAKE_CXX_FLAGS "-utf-8 -W4 -WX ${MSVC_DISABLED_WARNINGS_STR}")
+
+  # On Windows, prefer cl over gcc if both are available. By default most of
+  # the CMake generators prefer gcc, even on Windows.
+  set(CMAKE_GENERATOR_CC cl)
+
+  add_definitions(-D_HAS_EXCEPTIONS=0)
+  add_definitions(-DWIN32_LEAN_AND_MEAN)
+  add_definitions(-DNOMINMAX)
+  # Allow use of fopen.
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
 add_library(
   webcrypto
   
