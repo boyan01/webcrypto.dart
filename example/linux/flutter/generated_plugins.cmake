@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  webcrypto
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  webcrypto
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
