@@ -48,9 +48,17 @@ Pointer<T> Function<T extends NativeType>(String symbolName)?
     return null;
   }
 
-  final libraryFile = File.fromUri(
-    dotDartTool.resolve('webcrypto/$libraryFileName'),
-  );
+  final File libraryFile;
+  if (Platform.isWindows) {
+    libraryFile = File.fromUri(
+      dotDartTool.resolve('webcrypto/Debug/$libraryFileName'),
+    );
+  } else {
+    libraryFile = File.fromUri(
+      dotDartTool.resolve('webcrypto/$libraryFileName'),
+    );
+  }
+
   if (libraryFile.existsSync()) {
     final library = DynamicLibrary.open(libraryFile.path);
 
